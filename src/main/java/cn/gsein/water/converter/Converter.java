@@ -3,7 +3,6 @@ package cn.gsein.water.converter;
 import cn.gsein.water.FileType;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Properties;
 
 /**
@@ -12,9 +11,9 @@ import java.util.Properties;
  */
 public interface Converter {
 
-    void convert(FileType from, FileType to, InputStream inputStream, OutputStream outputStream);
+    void convert(FileType from, FileType to, InputStream inputStream, String outputPath);
 
-    default void convert(FileType from, FileType to, InputStream inputStream, OutputStream outputStream, Properties properties) {
-        convert(from, to, inputStream, outputStream);
+    default void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
+        convert(from, to, inputStream, outputPath);
     }
 }

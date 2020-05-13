@@ -2,14 +2,17 @@ package cn.gsein.water.converter.image;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Paths;
 
 /**
  * 不同图片格式间相互转换
@@ -17,10 +20,20 @@ import java.io.OutputStream;
  * @author G. Seinfeld
  * @since 2020-05-13
  */
+@Slf4j
 public class ImageToImageConverter implements Converter {
     @Override
-    public void convert(FileType from, FileType to, InputStream inputStream, OutputStream outputStream) {
+    public void convert(FileType from, FileType to, InputStream inputStream, String outputPath) {
+        File file = new File(outputPath);
+        if (!file.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            file.mkdirs();
+        }
+
+        String name = String.valueOf(System.currentTimeMillis());
+        FileOutputStream outputStream = null;
         try {
+            outputStream = new FileOutputStream(Paths.get(outputPath, name + "." + to.getName()).toString());
             BufferedImage bufferedImage = ImageIO.read(inputStream);
             ColorModel colorModel = bufferedImage.getColorModel();
 
@@ -45,7 +58,15 @@ public class ImageToImageConverter implements Converter {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 

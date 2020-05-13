@@ -17,7 +17,7 @@ public class WaterBuilder {
     private FileType from;
     private FileType to;
     private InputStream input;
-    private OutputStream output;
+    private String outputPath;
 
     public WaterBuilder() {
     }
@@ -57,37 +57,17 @@ public class WaterBuilder {
         }
     }
 
-    public WaterBuilder target(String target) {
-        try {
-            this.output = new FileOutputStream(target);
-            return this;
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
-
-    public WaterBuilder target(OutputStream target) {
-        this.output = target;
+    public WaterBuilder target(String targetPath) {
+        this.outputPath = targetPath;
         return this;
     }
 
-    public WaterBuilder target(File target) {
-        try {
-            this.output = new FileOutputStream(target);
-            return this;
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-    }
 
     public Water build() {
         try {
             ConverterFactory factory = to.getConverterFactoryClass().getConstructor().newInstance();
             Converter converter = factory.create(from);
-            return new Water(from, to, input, output, converter);
+            return new Water(from, to, input, outputPath, converter);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
