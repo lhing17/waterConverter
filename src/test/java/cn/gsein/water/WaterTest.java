@@ -13,10 +13,10 @@ class WaterTest {
     @Test
     void name() {
         Water water = new WaterBuilder()
-                .from(FileType.TEXT)
-                .to(FileType.IMAGE)
-                .source("C:/file/a.txt")
-                .target("C:/file/a.jpg")
+                .from(FileType.PNG)
+                .to(FileType.JPG)
+                .source("C:/file/a.jpg")
+                .target("C:/file/b.png")
                 .build();
         System.out.println(water);
         water.convert();

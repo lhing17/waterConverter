@@ -17,7 +17,8 @@ public class ImageConverterFactory implements ConverterFactory {
         switch (from) {
             case TEXT:
                 return new TextToImageConverter();
-            case IMAGE:
+            case JPG:
+            case PNG:
                 return new ImageToImageConverter();
             default:
                 throw new UnsupportedTypeConvertException("暂时不支持从" + from.getName() + "向图片的转换！");

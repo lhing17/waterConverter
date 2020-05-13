@@ -87,7 +87,7 @@ public class WaterBuilder {
         try {
             ConverterFactory factory = to.getConverterFactoryClass().getConstructor().newInstance();
             Converter converter = factory.create(from);
-            return new Water(input, output, converter);
+            return new Water(from, to, input, output, converter);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;

@@ -14,11 +14,15 @@ public enum FileType {
     /**
      * text
      */
-    TEXT("文本", TextConverterFactory.class),
+    TEXT("txt", TextConverterFactory.class),
     /**
-     * image
+     * jpeg
      */
-    IMAGE("图片", ImageConverterFactory.class);
+    JPG("jpg", ImageConverterFactory.class),
+    /**
+     * png
+     */
+    PNG("png", ImageConverterFactory.class);
 
     public Class<? extends ConverterFactory> getConverterFactoryClass() {
         return clazz;
