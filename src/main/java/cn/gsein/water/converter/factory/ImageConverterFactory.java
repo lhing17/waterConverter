@@ -19,6 +19,9 @@ public class ImageConverterFactory implements ConverterFactory {
                 return new TextToImageConverter();
             case JPG:
             case PNG:
+            case BMP:
+            case GIF:
+            case TIFF:
                 return new ImageToImageConverter();
             default:
                 throw new UnsupportedTypeConvertException("暂时不支持从" + from.getName() + "向图片的转换！");

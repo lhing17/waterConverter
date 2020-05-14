@@ -22,7 +22,19 @@ public enum FileType {
     /**
      * png
      */
-    PNG("png", ImageConverterFactory.class);
+    PNG("png", ImageConverterFactory.class),
+    /**
+     * bmp
+     */
+    BMP("bmp", ImageConverterFactory.class),
+    /**
+     * gif
+     */
+    GIF("gif", ImageConverterFactory.class),
+    /**
+     * tiff
+     */
+    TIFF("tiff", ImageConverterFactory.class);
 
     public Class<? extends ConverterFactory> getConverterFactoryClass() {
         return clazz;

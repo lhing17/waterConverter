@@ -11,12 +11,11 @@ class WaterTest {
     @Test
     void convertImageToImage() {
         Water water = new WaterBuilder()
-                .from(FileType.PNG)
-                .to(FileType.JPG)
-                .source("C:/file/a.jpg")
+                .from(FileType.GIF)
+                .to(FileType.TIFF)
+                .source("C:/file/0.gif")
                 .target("C:/file")
                 .build();
-        System.out.println(water);
         water.convert();
     }
 
@@ -24,7 +23,7 @@ class WaterTest {
     void convertTextToImage() {
         Water water = new WaterBuilder()
                 .from(FileType.TXT)
-                .to(FileType.PNG)
+                .to(FileType.TIFF)
                 .source("C:/file/a.txt")
                 .target("C:/file")
                 .build();
