@@ -153,7 +153,7 @@ public class TextToPdfConverter implements Converter {
             String sub = str.substring(start, i);
             if (font.getStringWidth(sub.replaceAll("\t", "    ")) / 1000f * fontSize > width && start < i - 1) {
                 list.add(str.substring(start, i - 1));
-                start = i;
+                start = i - 1;
             }
             if (i == str.length() - 1) {
                 list.add(str.substring(start, i + 1));
