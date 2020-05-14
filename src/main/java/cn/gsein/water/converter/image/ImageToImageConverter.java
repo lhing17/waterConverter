@@ -31,9 +31,11 @@ public class ImageToImageConverter implements Converter {
         }
 
         String name = String.valueOf(System.currentTimeMillis());
+        String fullName = Paths.get(outputPath, name + "." + to.getName()).toString();
+
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream(Paths.get(outputPath, name + "." + to.getName()).toString());
+            outputStream = new FileOutputStream(fullName);
             BufferedImage bufferedImage = ImageIO.read(inputStream);
             ColorModel colorModel = bufferedImage.getColorModel();
 

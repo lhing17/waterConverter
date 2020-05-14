@@ -15,7 +15,7 @@ public class ImageConverterFactory implements ConverterFactory {
     @Override
     public Converter create(FileType from) {
         switch (from) {
-            case TEXT:
+            case TXT:
                 return new TextToImageConverter();
             case JPG:
             case PNG:

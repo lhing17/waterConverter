@@ -3,15 +3,19 @@ package cn.gsein.water.converter.image;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -21,6 +25,7 @@ import java.util.zip.ZipOutputStream;
  * @author G. Seinfeld
  * @since 2020-05-12
  */
+@Slf4j
 public class TextToImageConverter implements Converter {
 
     Properties defaultProperties;
@@ -31,6 +36,9 @@ public class TextToImageConverter implements Converter {
         defaultProperties.setProperty("width", "1700");
         defaultProperties.setProperty("lineSpace", "30");
         defaultProperties.setProperty("height", "2200");
+        defaultProperties.setProperty("fontName", "宋体");
+        defaultProperties.setProperty("fontSize", "40");
+        defaultProperties.setProperty("fontStyle", String.valueOf(Font.PLAIN));
     }
 
     public static void main(String[] args) throws Exception {
@@ -39,7 +47,7 @@ public class TextToImageConverter implements Converter {
         String[] strArr = message.split("\n");
 
         TextToImageConverter converter = new TextToImageConverter();
-        converter.createImage(strArr, new Font("宋体", Font.PLAIN, 40), converter.defaultProperties, FileType.JPG, "C:/file/1.zip");
+        converter.createImage(Arrays.asList(strArr), converter.defaultProperties, FileType.JPG, "C:/file/1.zip");
     }
 
 
@@ -63,7 +71,7 @@ public class TextToImageConverter implements Converter {
     /**
      * 根据str,font的样式等生成图片
      */
-    public void createImage(String[] strArr, Font font, Properties properties, FileType to, String outputPath) throws Exception {
+    public void createImage(List<String> lines, Properties properties, FileType to, String outputPath) throws Exception {
 
         // 每个字的边长，标点符号也算一个字
         int characterSideLength = 40;
@@ -73,11 +81,22 @@ public class TextToImageConverter implements Converter {
         int lineSpace = Integer.parseInt(properties.getProperty("lineSpace"));
         int margin = Integer.parseInt(properties.getProperty("margin"));
 
+        File file = new File(outputPath);
+        if (!file.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            file.mkdirs();
+        }
+
+        String name = String.valueOf(System.currentTimeMillis());
+        String fullName = Paths.get(outputPath, name + ".zip").toString();
+
+        Font font = createFontFromProperties(properties);
+
         // 每行字数
         int charactersPerLine = (pageWidth - 2 * margin - 1) / characterSideLength + 1;
 
         List<String> lineList = new ArrayList<>();
-        for (String str : strArr) {
+        for (String str : lines) {
             lineList.addAll(slice(str, charactersPerLine));
         }
 
@@ -90,7 +109,7 @@ public class TextToImageConverter implements Converter {
         // 生成图片数量
         int imageCount = (lineCount - 1) / linesPerPage + 1;
 
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputPath))) {
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(fullName))) {
             for (int i = 0; i < imageCount; i++) {
 
                 zipOutputStream.putNextEntry(new ZipEntry(i + "." + to.getName()));
@@ -123,9 +142,25 @@ public class TextToImageConverter implements Converter {
 
     }
 
+    private Font createFontFromProperties(Properties properties) {
+        // 字体相关设置
+        String fontName = properties.getProperty("fontName");
+        int fontSize = Integer.parseInt(properties.getProperty("fontSize"));
+        int fontStyle = Integer.parseInt(properties.getProperty("fontStyle"));
+        //noinspection MagicConstant
+        return new Font(fontName, fontStyle, fontSize);
+    }
+
     @Override
     public void convert(FileType from, FileType to, InputStream inputStream, String outputPath) {
-        throw new UnsupportedOperationException("暂时还未支持该操作");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+
+            createImage(reader.lines().collect(Collectors.toList()), defaultProperties, to, outputPath);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }
 

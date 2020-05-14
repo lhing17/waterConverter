@@ -14,7 +14,7 @@ public enum FileType {
     /**
      * text
      */
-    TEXT("txt", TextConverterFactory.class),
+    TXT("txt", TextConverterFactory.class),
     /**
      * jpeg
      */
