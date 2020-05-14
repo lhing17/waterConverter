@@ -2,6 +2,7 @@ package cn.gsein.water;
 
 import cn.gsein.water.converter.factory.ConverterFactory;
 import cn.gsein.water.converter.factory.ImageConverterFactory;
+import cn.gsein.water.converter.factory.PdfConverterFactory;
 import cn.gsein.water.converter.factory.TextConverterFactory;
 
 /**
@@ -34,7 +35,11 @@ public enum FileType {
     /**
      * tiff
      */
-    TIFF("tiff", ImageConverterFactory.class);
+    TIFF("tiff", ImageConverterFactory.class),
+    /**
+     * pdf
+     */
+    PDF("pdf", PdfConverterFactory.class);
 
     public Class<? extends ConverterFactory> getConverterFactoryClass() {
         return clazz;

@@ -3,6 +3,7 @@ package cn.gsein.water.converter.image;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.Converter;
+import cn.gsein.water.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -50,24 +51,6 @@ public class TextToImageConverter implements Converter {
         converter.createImage(Arrays.asList(strArr), converter.defaultProperties, FileType.JPG, "C:/file/1.zip");
     }
 
-
-    /**
-     * 将字符串按长度切成片段
-     *
-     * @param source      源字符串
-     * @param sliceLength 每个片段的长度
-     * @return 切成片段的字符串列表
-     */
-    private List<String> slice(String source, int sliceLength) {
-        List<String> list = new ArrayList<>();
-        // 分切片数
-        int count = (source.length() - 1) / sliceLength + 1;
-        for (int i = 0; i < count; i++) {
-            list.add(source.substring(i * sliceLength, Math.min(source.length(), (i + 1) * sliceLength)));
-        }
-        return list;
-    }
-
     /**
      * 根据str,font的样式等生成图片
      */
@@ -97,7 +80,7 @@ public class TextToImageConverter implements Converter {
 
         List<String> lineList = new ArrayList<>();
         for (String str : lines) {
-            lineList.addAll(slice(str, charactersPerLine));
+            lineList.addAll(StringUtils.slice(str, charactersPerLine));
         }
 
 

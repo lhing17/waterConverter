@@ -31,6 +31,17 @@ class WaterTest {
     }
 
     @Test
+    void convertTextToPdf() {
+        Water water = new WaterBuilder()
+                .from(FileType.TXT)
+                .to(FileType.PDF)
+                .source("C:/file/a.txt")
+                .target("C:/file")
+                .build();
+        water.convert();
+    }
+
+    @Test
     void checkSupport() {
         String support = Water.checkSupport();
         System.out.println(support);
