@@ -5,7 +5,8 @@ import cn.gsein.water.converter.Converter;
 import cn.gsein.water.converter.factory.ConverterFactory;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * @author G. Seinfeld
@@ -17,6 +18,10 @@ public class WaterBuilder {
     private FileType from;
     private FileType to;
     private InputStream input;
+    private String inputPath;
+    private File inputFile;
+    private String[] inputPaths;
+    private File[] inputFiles;
     private String outputPath;
 
     public WaterBuilder() {
@@ -33,13 +38,8 @@ public class WaterBuilder {
     }
 
     public WaterBuilder source(String source) {
-        try {
-            this.input = new FileInputStream(source);
-            return this;
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
+        this.inputPath = source;
+        return this;
     }
 
     public WaterBuilder source(InputStream source) {
@@ -48,13 +48,18 @@ public class WaterBuilder {
     }
 
     public WaterBuilder source(File source) {
-        try {
-            this.input = new FileInputStream(source);
-            return this;
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
+        this.inputFile = source;
+        return this;
+    }
+
+    public WaterBuilder source(File... source) {
+        this.inputFiles = source;
+        return this;
+    }
+
+    public WaterBuilder source(String... source) {
+        this.inputPaths = source;
+        return this;
     }
 
     public WaterBuilder target(String targetPath) {
@@ -67,7 +72,7 @@ public class WaterBuilder {
         try {
             ConverterFactory factory = to.getConverterFactoryClass().getConstructor().newInstance();
             Converter converter = factory.create(from);
-            return new Water(from, to, input, outputPath, converter);
+            return new Water(from, to, input, inputPath, inputFile, inputPaths, inputFiles, outputPath, converter);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
