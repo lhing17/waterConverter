@@ -52,6 +52,17 @@ class WaterTest {
         water.convert();
     }
 
+    @Test
+    void convertMultipleImagesToPdf() {
+        Water water = new WaterBuilder()
+                .from(FileType.PNG)
+                .to(FileType.PDF)
+                .source("C:/file/0.png", "C:/file/1.png", "C:/file/2.png", "C:/file/3.png")
+                .target("C:/file")
+                .build();
+        water.convert();
+    }
+
 
     @Test
     void checkSupport() {

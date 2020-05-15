@@ -2,6 +2,7 @@ package cn.gsein.water.converter.factory;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.Converter;
+import cn.gsein.water.converter.pdf.ImageToPdfConverter;
 import cn.gsein.water.converter.pdf.TextToPdfConverter;
 import cn.gsein.water.exception.UnsupportedTypeConvertException;
 
@@ -22,7 +23,7 @@ public class PdfConverterFactory implements ConverterFactory {
             case TIFF:
             case BMP:
             case PNG:
-                return null;
+                return new ImageToPdfConverter();
             default:
                 throw new UnsupportedTypeConvertException("暂时不支持从" + from.getName() + "向pdf的转换！");
         }
