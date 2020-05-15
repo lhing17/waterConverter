@@ -7,6 +7,8 @@ import cn.gsein.water.converter.image.TextToImageConverter;
 import cn.gsein.water.exception.UnsupportedTypeConvertException;
 
 /**
+ * 图片文件转化器工厂
+ *
  * @author G. Seinfeld
  * @since 2020-05-13
  */

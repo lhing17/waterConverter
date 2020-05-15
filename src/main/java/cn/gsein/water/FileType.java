@@ -6,7 +6,7 @@ import cn.gsein.water.converter.factory.PdfConverterFactory;
 import cn.gsein.water.converter.factory.TextConverterFactory;
 
 /**
- * 文件类型
+ * 文件类型枚举
  *
  * @author G. Seinfeld
  * @since 2020-05-13
@@ -45,12 +45,17 @@ public enum FileType {
         return clazz;
     }
 
+    /**
+     * 文件的扩展名
+     */
     private final String name;
 
+    /**
+     * 转换器工厂的类
+     */
     private final Class<? extends ConverterFactory> clazz;
 
     FileType(String name, Class<? extends ConverterFactory> clazz) {
-
         this.name = name;
         this.clazz = clazz;
     }

@@ -1,7 +1,7 @@
 package cn.gsein.water.converter.pdf;
 
 import cn.gsein.water.FileType;
-import cn.gsein.water.converter.Converter;
+import cn.gsein.water.converter.BaseConverter;
 import cn.gsein.water.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -26,9 +26,8 @@ import java.util.stream.Stream;
  * @since 2020-05-15
  */
 @Slf4j
-public class ImageToPdfConverter implements Converter {
+public class ImageToPdfConverter extends BaseConverter {
 
-    Properties defaultProperties;
     private static final float POINTS_PER_MM = 2.8346457f;
 
     public ImageToPdfConverter() {
@@ -37,26 +36,8 @@ public class ImageToPdfConverter implements Converter {
         defaultProperties.setProperty("pageSize", "A4");
     }
 
-    public static void main(String[] args) {
-
-        String[] fileNames = new String[]{"C:/file/0.png", "C:/file/1.png", "C:/file/2.png", "C:/file/3.png"};
-        Stream<byte[]> byteArrayStream = Arrays.stream(fileNames).map(
-                fileName -> {
-                    try {
-                        return Files.readAllBytes(Paths.get(fileName));
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                        return null;
-                    }
-                }
-        );
-        ImageToPdfConverter converter = new ImageToPdfConverter();
-        converter.createPdf(converter.defaultProperties, byteArrayStream, "C:/file");
-    }
-
-
     @Override
-    public void convert(FileType from, FileType to, InputStream inputStream, String outputPath) {
+    public void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
         byte[] byteArray = null;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             int len;
@@ -71,11 +52,12 @@ public class ImageToPdfConverter implements Converter {
             log.error(e.getMessage(), e);
         }
         Stream<byte[]> byteArrayStream = Stream.of(byteArray);
-        createPdf(defaultProperties, byteArrayStream, outputPath);
+        createPdf(properties, byteArrayStream, outputPath);
     }
 
+
     @Override
-    public void convert(FileType from, FileType to, File[] inputFiles, String outputPath) {
+    public void convert(FileType from, FileType to, File[] inputFiles, String outputPath, Properties properties) {
         Stream<byte[]> byteArrayStream = Arrays.stream(inputFiles).map(
                 inputFile -> {
                     try {
@@ -86,7 +68,7 @@ public class ImageToPdfConverter implements Converter {
                     }
                 }
         );
-        createPdf(defaultProperties, byteArrayStream, outputPath);
+        createPdf(properties, byteArrayStream, outputPath);
     }
 
     public void createPdf(Properties properties, Stream<byte[]> byteArrayStream, String outputPath) {

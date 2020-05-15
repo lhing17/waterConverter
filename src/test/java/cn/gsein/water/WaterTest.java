@@ -11,9 +11,9 @@ class WaterTest {
     @Test
     void convertImageToImage() {
         Water water = new WaterBuilder()
-                .from(FileType.GIF)
-                .to(FileType.TIFF)
-                .source("C:/file/0.gif")
+                .from(FileType.PNG)
+                .to(FileType.JPG)
+                .source("C:/file/0.png")
                 .target("C:/file")
                 .build();
         water.convert();
@@ -24,7 +24,7 @@ class WaterTest {
         Water water = new WaterBuilder()
                 .from(FileType.TXT)
                 .to(FileType.TIFF)
-                .source("C:/file/a.txt")
+                .source("C:/file/b.txt")
                 .target("C:/file")
                 .build();
         water.convert();
