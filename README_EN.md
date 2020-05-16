@@ -1,16 +1,15 @@
-Water转换器是一套基于Java编写的API接口，旨在通过一行代码将你的文件转成任意格式。此项目受到了Chrome插件Convertio的启发。
+The Water Converter is a suite of convenient API written in Java, which aims to convert your file to **ANY** format by ONE LINE code. It was inspired by Convertio, an extension of the Chrome browser.
 
+## Supported Features
 
-## 当前支持的特性
-
-### 当前支持以下转换
+### supported conversions
 
 -[X] text -> image
 -[X] image -> image
 -[X] text -> pdf
 -[X] image -> pdf
 
-### 当前支持以下图片格式
+### supported image type
 
 - png
 - jpg/jpeg
@@ -18,17 +17,18 @@ Water转换器是一套基于Java编写的API接口，旨在通过一行代码�
 - tiff
 - gif
 
-## TODO清单
+## TODO list
 
-- 支持excel
-- 支持html
+- excel support
+- html support
 
-由于本项目还处于活跃开发的状态，我们可能直接更改API而不进行警告。
 
-## 如何使用
-### 进行格式转换
+This project is under active development, we might change APIs without notice.
+
+## Usage
+### Do conversion
 ```java
-// 将文本文件转为JPG格式
+// convert a single text file into jpeg file
 Water water = new WaterBuilder()
         .from(FileType.TXT)
         .to(FileType.JPG)
@@ -39,7 +39,7 @@ water.convert();
 ```
 
 ```java
-// 将多张图片转为PDF
+// convert multiple png files into one pdf file
 Water water = new WaterBuilder()
         .from(FileType.PNG)
         .to(FileType.PDF)
@@ -49,14 +49,14 @@ Water water = new WaterBuilder()
 water.convert();
 ```
 
-### 查看当前支持哪些转换
+### Check support conversions
 ```java
-// 查看所有支持的转换
+// check all support conversions
 String support = Water.checkSupport();
 
-// 查看可以从哪些类型转换为指定类型
+// check support conversions to specified type
 String toPngSupport = Water.checkSupportByToType(FileType.PNG);
 
-// 查看从指定类型可以转换为哪些类型
+// check support conversions from specified type
 String fromTxtSupport = Water.checkSupportByFromType(FileType.TXT);
 ```
