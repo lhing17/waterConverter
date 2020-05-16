@@ -1,4 +1,4 @@
-The Water Converter is a suite of convenient API written in Java, which aims to convert your file to **ANY** format. It was inspired by Convertio, an extension of the Chrome browser.
+The Water Converter is a suite of convenient API written in Java, which aims to convert your file to **ANY** format by ONE LINE code. It was inspired by Convertio, an extension of the Chrome browser.
 
 ## Supported Features
 

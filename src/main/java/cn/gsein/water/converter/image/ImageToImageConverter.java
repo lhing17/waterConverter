@@ -49,12 +49,29 @@ public class ImageToImageConverter extends BaseConverter {
                 noAlphaToAlpha(to, outputStream, bufferedImage, imageStyle);
             } else {
                 // alpha相同的情况
-                ImageIO.write(bufferedImage, to.getName(), outputStream);
+                toSameAlpha(to, outputStream, bufferedImage, imageStyle);
             }
 
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    private void toSameAlpha(FileType to, FileOutputStream outputStream, BufferedImage bufferedImage, ImageStyle imageStyle) throws IOException {
+        BufferedImage newBufferedImage;
+        if (hasAlpha(to)) {
+            newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
+            newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, imageStyle.width, imageStyle.height,
+                    null);
+        } else {
+            newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, imageStyle.width, imageStyle.height,
+                    Color.WHITE, null);
+        }
+        ImageIO.write(newBufferedImage, to.getName(), outputStream);
+
     }
 
     private boolean hasAlpha(FileType to) {
@@ -70,7 +87,7 @@ public class ImageToImageConverter extends BaseConverter {
         newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, style.width, style.height,
                 Color.WHITE, null);
 
-        // write to jpeg file
+        // write to specified image file
         ImageIO.write(newBufferedImage, to.getName(), outputStream);
     }
 
