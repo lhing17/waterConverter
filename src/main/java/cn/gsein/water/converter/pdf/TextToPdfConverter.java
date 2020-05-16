@@ -2,6 +2,7 @@ package cn.gsein.water.converter.pdf;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.BaseConverter;
+import cn.gsein.water.util.FileUtils;
 import cn.gsein.water.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fontbox.ttf.TrueTypeCollection;
@@ -14,7 +15,6 @@ import org.apache.pdfbox.util.Matrix;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -42,7 +42,7 @@ public class TextToPdfConverter extends BaseConverter {
 
     @Override
     public void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
             createPdf(reader.lines().collect(Collectors.toList()), properties, outputPath);
 
@@ -52,16 +52,10 @@ public class TextToPdfConverter extends BaseConverter {
     }
 
     public void createPdf(List<String> lines, Properties properties, String outputPath) {
+        String name = String.valueOf(System.currentTimeMillis());
         PDDocument document = new PDDocument();
 
-        File file = new File(outputPath);
-        if (!file.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            file.mkdirs();
-        }
-
-        String name = String.valueOf(System.currentTimeMillis());
-        String fullName = Paths.get(outputPath, name + ".pdf").toString();
+        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name + ".pdf");
 
         int fontSize = Integer.parseInt(properties.getProperty("fontSize"));
         float lineSpace = Float.parseFloat(properties.getProperty("lineSpace"));
