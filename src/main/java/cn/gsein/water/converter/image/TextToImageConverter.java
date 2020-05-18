@@ -69,12 +69,12 @@ public class TextToImageConverter extends BaseConverter {
 
     }
 
-    private void createOnePageImage(FileType to, ImageStyle imageStyle, String fullName) throws IOException {
+    protected void createOnePageImage(FileType to, ImageStyle imageStyle, String fullName) throws IOException {
         BufferedImage image = buildBufferedImage(imageStyle, 0);
         ImageIO.write(image, to.getName(), new FileOutputStream(fullName + "." + to.getName()));
     }
 
-    private void createMultiplePageImagesZip(FileType to, ImageStyle imageStyle, String fullName) throws IOException {
+    protected void createMultiplePageImagesZip(FileType to, ImageStyle imageStyle, String fullName) throws IOException {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(fullName + ".zip"))) {
             for (int i = 0; i < imageStyle.imageCount; i++) {
 
@@ -86,7 +86,7 @@ public class TextToImageConverter extends BaseConverter {
         }
     }
 
-    private BufferedImage buildBufferedImage(ImageStyle style, int i) {
+    protected BufferedImage buildBufferedImage(ImageStyle style, int i) {
         // 创建图片
         BufferedImage image = new BufferedImage(style.pageWidth, style.pageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
@@ -109,16 +109,16 @@ public class TextToImageConverter extends BaseConverter {
         return image;
     }
 
-    private static class ImageStyle {
+    protected static class ImageStyle {
         private final Properties properties;
         private final String outputPath;
         private final List<String> lines;
-        private int pageWidth;
-        private int pageHeight;
+        protected int pageWidth;
+        protected int pageHeight;
         private int margin;
         private String fullName;
         private Font font;
-        private int imageCount;
+        protected int imageCount;
         private List<String> lineList;
         private int realLineHeight;
         private int linesPerPage;

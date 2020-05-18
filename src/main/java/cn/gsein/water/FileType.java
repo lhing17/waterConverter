@@ -1,9 +1,6 @@
 package cn.gsein.water;
 
-import cn.gsein.water.converter.factory.ConverterFactory;
-import cn.gsein.water.converter.factory.ImageConverterFactory;
-import cn.gsein.water.converter.factory.PdfConverterFactory;
-import cn.gsein.water.converter.factory.TextConverterFactory;
+import cn.gsein.water.converter.factory.*;
 
 /**
  * 文件类型枚举
@@ -37,19 +34,18 @@ public enum FileType {
      */
     TIFF("tiff", ImageConverterFactory.class),
     /**
+     * svg
+     */
+    SVG("svg", SvgConverterFactory.class),
+    /**
      * pdf
      */
     PDF("pdf", PdfConverterFactory.class);
-
-    public Class<? extends ConverterFactory> getConverterFactoryClass() {
-        return clazz;
-    }
 
     /**
      * 文件的扩展名
      */
     private final String name;
-
     /**
      * 转换器工厂的类
      */
@@ -58,6 +54,10 @@ public enum FileType {
     FileType(String name, Class<? extends ConverterFactory> clazz) {
         this.name = name;
         this.clazz = clazz;
+    }
+
+    public Class<? extends ConverterFactory> getConverterFactoryClass() {
+        return clazz;
     }
 
     public String getName() {
