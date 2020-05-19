@@ -35,7 +35,7 @@ public class ImageToImageConverter extends BaseConverter {
         String name = properties.getProperty("name", String.valueOf(System.currentTimeMillis()));
         String fullName = FileUtils.makeDirAndGetFullName(outputPath, name + "." + to.getName());
 
-        try (FileOutputStream outputStream = new FileOutputStream(fullName);) {
+        try (FileOutputStream outputStream = new FileOutputStream(fullName)) {
             BufferedImage bufferedImage = ImageIO.read(inputStream);
             ImageStyle imageStyle = new ImageStyle(properties, bufferedImage).invoke();
 
@@ -111,13 +111,13 @@ public class ImageToImageConverter extends BaseConverter {
         ImageIO.write(newBufferedImage, to.getName(), outputStream);
     }
 
-    private static class ImageStyle {
-        private final Properties properties;
-        private final BufferedImage bufferedImage;
-        private int width;
-        private int height;
+    protected static class ImageStyle {
+        protected final Properties properties;
+        protected final BufferedImage bufferedImage;
+        protected int width;
+        protected int height;
         // 是否将白色 #FFFFFF 转换为透明
-        private boolean whiteToAlpha;
+        protected boolean whiteToAlpha;
 
         public ImageStyle(Properties properties, BufferedImage bufferedImage) {
             this.properties = properties;
