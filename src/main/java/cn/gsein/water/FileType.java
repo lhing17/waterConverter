@@ -2,6 +2,10 @@ package cn.gsein.water;
 
 import cn.gsein.water.converter.factory.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * 文件类型枚举
  *
@@ -9,6 +13,7 @@ import cn.gsein.water.converter.factory.*;
  * @since 2020-05-13
  */
 public enum FileType {
+
     /**
      * text
      */
@@ -42,6 +47,11 @@ public enum FileType {
      */
     PDF("pdf", PdfConverterFactory.class);
 
+    private static final Map<String, FileType> FILE_TYPE_MAP = new HashMap<>();
+
+    private static final Object LOCK = new Object();
+    private static final AtomicBoolean REGISTERED = new AtomicBoolean();
+
     /**
      * 文件的扩展名
      */
@@ -56,11 +66,26 @@ public enum FileType {
         this.clazz = clazz;
     }
 
-    public Class<? extends ConverterFactory> getConverterFactoryClass() {
-        return clazz;
+    public static FileType getFileTypeByName(String name) {
+        if (!REGISTERED.get()) {
+            synchronized (LOCK) {
+                if (!REGISTERED.get()) {
+                    for (FileType type : FileType.values()) {
+                        FILE_TYPE_MAP.put(type.getName(), type);
+                    }
+                    FILE_TYPE_MAP.put("jpeg", FileType.JPG);
+                    REGISTERED.set(true);
+                }
+            }
+        }
+        return FILE_TYPE_MAP.get(name);
     }
 
     public String getName() {
         return name;
+    }
+
+    public Class<? extends ConverterFactory> getConverterFactoryClass() {
+        return clazz;
     }
 }
