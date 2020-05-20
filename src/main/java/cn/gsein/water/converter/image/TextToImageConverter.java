@@ -137,11 +137,11 @@ public class TextToImageConverter extends BaseConverter {
             int fontSize = Integer.parseInt(properties.getProperty("fontSize", "40"));
             int lineSpace = Integer.parseInt(properties.getProperty("lineSpace", "30"));
             String name = properties.getProperty("name", String.valueOf(System.currentTimeMillis()));
+            fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
 
             pageWidth = Integer.parseInt(properties.getProperty("width", "1700"));
             pageHeight = Integer.parseInt(properties.getProperty("height", "2200"));
             margin = Integer.parseInt(properties.getProperty("margin", "200"));
-            fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
             font = createFontFromProperties(properties);
 
             // 每行字数

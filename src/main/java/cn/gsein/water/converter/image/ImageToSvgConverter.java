@@ -2,6 +2,7 @@ package cn.gsein.water.converter.image;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.util.FileUtils;
+import cn.gsein.water.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
@@ -29,8 +30,8 @@ public class ImageToSvgConverter extends ImageToImageConverter {
 
     @Override
     public void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
-        String name = properties.getProperty("name", String.valueOf(System.currentTimeMillis()));
-        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name + "." + to.getName());
+        String name = PropertyUtils.getName(properties, to);
+        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
 
         try (FileOutputStream outputStream = new FileOutputStream(fullName);) {
             BufferedImage bufferedImage = ImageIO.read(inputStream);

@@ -2,7 +2,9 @@ package cn.gsein.water.converter.pdf;
 
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.BaseConverter;
+import cn.gsein.water.util.FileUtils;
 import cn.gsein.water.util.IOUtils;
+import cn.gsein.water.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -14,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -52,7 +53,7 @@ public class ImageToPdfConverter extends BaseConverter {
             log.error(e.getMessage(), e);
         }
         Stream<byte[]> byteArrayStream = Stream.of(byteArray);
-        createPdf(properties, byteArrayStream, outputPath);
+        createPdf(properties, byteArrayStream, outputPath, to);
     }
 
 
@@ -68,10 +69,10 @@ public class ImageToPdfConverter extends BaseConverter {
                     }
                 }
         );
-        createPdf(properties, byteArrayStream, outputPath);
+        createPdf(properties, byteArrayStream, outputPath, to);
     }
 
-    public void createPdf(Properties properties, Stream<byte[]> byteArrayStream, String outputPath) {
+    public void createPdf(Properties properties, Stream<byte[]> byteArrayStream, String outputPath, FileType to) {
         PDDocument document = new PDDocument();
 
         File file = new File(outputPath);
@@ -80,8 +81,8 @@ public class ImageToPdfConverter extends BaseConverter {
             file.mkdirs();
         }
 
-        String name = String.valueOf(System.currentTimeMillis());
-        String fullName = Paths.get(outputPath, name + ".pdf").toString();
+        String name = PropertyUtils.getName(properties, to);
+        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
 
         byteArrayStream.forEach(
                 bytes -> {

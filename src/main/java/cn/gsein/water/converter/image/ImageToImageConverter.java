@@ -4,6 +4,7 @@ import cn.gsein.water.FileType;
 import cn.gsein.water.converter.BaseConverter;
 import cn.gsein.water.image.CustomImageFilter;
 import cn.gsein.water.util.FileUtils;
+import cn.gsein.water.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -31,9 +32,8 @@ public class ImageToImageConverter extends BaseConverter {
 
     @Override
     public void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
-
-        String name = properties.getProperty("name", String.valueOf(System.currentTimeMillis()));
-        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name + "." + to.getName());
+        String name = PropertyUtils.getName(properties, to);
+        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
 
         try (FileOutputStream outputStream = new FileOutputStream(fullName)) {
             BufferedImage bufferedImage = ImageIO.read(inputStream);

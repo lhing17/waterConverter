@@ -4,6 +4,7 @@ import cn.gsein.water.FileType;
 import cn.gsein.water.converter.BaseConverter;
 import cn.gsein.water.util.FileUtils;
 import cn.gsein.water.util.IOUtils;
+import cn.gsein.water.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fontbox.ttf.TrueTypeCollection;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -44,18 +45,18 @@ public class TextToPdfConverter extends BaseConverter {
     public void convert(FileType from, FileType to, InputStream inputStream, String outputPath, Properties properties) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-            createPdf(reader.lines().collect(Collectors.toList()), properties, outputPath);
+            createPdf(reader.lines().collect(Collectors.toList()), properties, outputPath, to);
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    public void createPdf(List<String> lines, Properties properties, String outputPath) {
-        String name = String.valueOf(System.currentTimeMillis());
+    public void createPdf(List<String> lines, Properties properties, String outputPath, FileType to) {
         PDDocument document = new PDDocument();
 
-        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name + ".pdf");
+        String name = PropertyUtils.getName(properties, to);
+        String fullName = FileUtils.makeDirAndGetFullName(outputPath, name);
 
         int fontSize = Integer.parseInt(properties.getProperty("fontSize"));
         float lineSpace = Float.parseFloat(properties.getProperty("lineSpace"));
