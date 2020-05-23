@@ -66,19 +66,19 @@ class WaterTest {
 
     @Test
     void checkSupport() {
-        String support = Water.checkSupport();
+        String support = Water.checkAllReadableSupports();
         System.out.println(support);
     }
 
     @Test
     void checkSupportByFromType() {
-        String support = Water.checkSupportByFromType(FileType.PNG);
+        String support = Water.checkReadableSupportsByFromTypes(FileType.PNG);
         System.out.println(support);
     }
 
     @Test
     void checkSupportByToType() {
-        String support = Water.checkSupportByToType(FileType.PNG);
+        String support = Water.checkReadableSupportsByToTypes(FileType.PNG);
         System.out.println(support);
     }
 }

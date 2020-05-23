@@ -53,11 +53,11 @@ water.convert();
 ### 查看当前支持哪些转换
 ```java
 // 查看所有支持的转换
-String support = Water.checkSupport();
+String support = Water.checkAllReadableSupports();
 
 // 查看可以从哪些类型转换为指定类型
-String toPngSupport = Water.checkSupportByToType(FileType.PNG);
+String toPngSupport = Water.checkReadableSupportsByFromTypes(FileType.PNG);
 
 // 查看从指定类型可以转换为哪些类型
-String fromTxtSupport = Water.checkSupportByFromType(FileType.TXT);
+String fromTxtSupport = Water.checkReadableSupportsByToTypes(FileType.TXT);
 ```

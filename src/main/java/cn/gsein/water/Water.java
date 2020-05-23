@@ -3,6 +3,7 @@ package cn.gsein.water;
 import cn.gsein.water.converter.Converter;
 import cn.gsein.water.converter.factory.ConverterFactory;
 import cn.gsein.water.util.IOUtils;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
@@ -11,9 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * 统一对外接口
@@ -52,50 +52,52 @@ public class Water {
         this.properties = properties;
     }
 
-    public static String checkSupport() {
-        List<String> supportList = new ArrayList<>();
-
-        for (FileType toType : FileType.values()) {
-            String supportByToType = checkSupportByToType(toType);
-            if (StrUtil.isNotEmpty(supportByToType)) {
-                supportList.add(supportByToType);
+    public static Map<FileType, List<FileType>> checkSupport(List<FileType> fromList, List<FileType> toList) {
+        Map<FileType, List<FileType>> supportMap = new HashMap<>();
+        List<FileType> internalFromList = CollectionUtil.isEmpty(fromList) ? Arrays.asList(FileType.values()) : fromList;
+        List<FileType> internalToList = CollectionUtil.isEmpty(toList) ? Arrays.asList(FileType.values()) : toList;
+        for (FileType fromType : internalFromList) {
+            List<FileType> supportToListOfFromType = new ArrayList<>();
+            for (FileType toType : internalToList) {
+                try {
+                    ConverterFactory factory = toType.getConverterFactoryClass().getConstructor().newInstance();
+                    Converter converter = factory.create(fromType);
+                    if (converter != null) {
+                        supportToListOfFromType.add(toType);
+                    }
+                } catch (Exception ignored) {
+                }
             }
+            supportMap.put(fromType, supportToListOfFromType);
         }
-        return String.join("\n", supportList);
+        return supportMap;
     }
 
-    public static String checkSupportByToType(FileType toType) {
-        List<String> supportList = new ArrayList<>();
-        try {
-            ConverterFactory converterFactory = toType.getConverterFactoryClass().getConstructor().newInstance();
-            for (FileType fromType : FileType.values()) {
-                addSupportIfConverterExists(fromType, supportList, toType, converterFactory);
-            }
-        } catch (Exception ignored) {
-        }
-        return String.join("\n", supportList);
+    public static String checkAllReadableSupports() {
+        Map<FileType, List<FileType>> supportMap = checkSupport(null, null);
+        return convertSupportMapToReadableText(supportMap);
     }
 
-    private static void addSupportIfConverterExists(FileType fromType, List<String> supportList, FileType toType, ConverterFactory converterFactory) {
-        try {
-            Converter converter = converterFactory.create(fromType);
-            if (converter != null) {
-                supportList.add(fromType.getName() + " -> " + toType.getName());
+    private static String convertSupportMapToReadableText(Map<FileType, List<FileType>> supportMap) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<FileType, List<FileType>> entry : supportMap.entrySet()) {
+            FileType from = entry.getKey();
+            for (FileType to : entry.getValue()) {
+                builder.append(from.getName()).append(" -> ").append(to.getName()).append("\n");
             }
-        } catch (Exception ignored) {
         }
+        return builder.toString();
     }
 
-    public static String checkSupportByFromType(FileType fromType) {
-        List<String> supportList = new ArrayList<>();
-        for (FileType toType : FileType.values()) {
-            try {
-                ConverterFactory converterFactory = toType.getConverterFactoryClass().getConstructor().newInstance();
-                addSupportIfConverterExists(fromType, supportList, toType, converterFactory);
-            } catch (Exception ignored) {
-            }
-        }
-        return String.join("\n", supportList);
+    public static String checkReadableSupportsByToTypes(FileType... toTypes) {
+        Map<FileType, List<FileType>> supportMap = checkSupport(null, Arrays.asList(toTypes));
+        return convertSupportMapToReadableText(supportMap);
+    }
+
+
+    public static String checkReadableSupportsByFromTypes(FileType... fromTypes) {
+        Map<FileType, List<FileType>> supportMap = checkSupport(Arrays.asList(fromTypes), null);
+        return convertSupportMapToReadableText(supportMap);
     }
 
     /**
