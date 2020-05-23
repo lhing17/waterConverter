@@ -17,6 +17,7 @@ Water转换器是一套基于Java编写的API接口，旨在通过一行代码�
 - bmp
 - tiff
 - gif
+- svg
 
 ## TODO清单
 

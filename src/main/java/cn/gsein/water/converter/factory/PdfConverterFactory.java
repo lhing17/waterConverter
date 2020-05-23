@@ -3,6 +3,7 @@ package cn.gsein.water.converter.factory;
 import cn.gsein.water.FileType;
 import cn.gsein.water.converter.Converter;
 import cn.gsein.water.converter.pdf.ImageToPdfConverter;
+import cn.gsein.water.converter.pdf.SvgToPdfConverter;
 import cn.gsein.water.converter.pdf.TextToPdfConverter;
 import cn.gsein.water.exception.UnsupportedTypeConvertException;
 
@@ -24,6 +25,8 @@ public class PdfConverterFactory implements ConverterFactory {
             case BMP:
             case PNG:
                 return new ImageToPdfConverter();
+            case SVG:
+                return new SvgToPdfConverter();
             default:
                 throw new UnsupportedTypeConvertException("暂时不支持从" + from.getName() + "向pdf的转换！");
         }
